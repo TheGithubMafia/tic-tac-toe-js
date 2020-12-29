@@ -1,18 +1,22 @@
 const socket = io();
 const joinGameButton = document.getElementById("join");
 const createGameButton = document.getElementById("create");
-
+const gameId = document.getElementById('game-id');
+const playerOne = document.getElementById('new-game-playername');
+const playerTwo = document.getElementById('join-game-playername');
 createGameButton.addEventListener("click", handleCreateGame);
 joinGameButton.addEventListener("click", handleJoinGame);
+const p = document.querySelector('p');
+
 
 function handleCreateGame(e) {
-	socket.emit("newGame");
+	e.preventDefault();
+	socket.emit("newGame", playerOne.value);
 }
 
 function handleJoinGame(e) {
 	e.preventDefault();
-	console.log(document.querySelector("input").value);
-	socket.emit("joinGame", document.querySelector("input").value);
+	socket.emit("joinGame", gameId.value, playerTwo.value);
 }
 // socket.on('connection')
 const cells = document.querySelectorAll(".cell");
@@ -31,4 +35,12 @@ socket.on("update", (id, currentPlayer) => {
 
 socket.on("gameCode", (code) => {
 	document.querySelector("#title").innerText = `joined game ${code}`;
+});
+
+socket.on('playerName', (name) => {
+	p.innerText = `${name} vs `
+});
+
+socket.on('playerNames', (one, two) => {
+	p.innerText = `${one} vs ${two}`;
 });

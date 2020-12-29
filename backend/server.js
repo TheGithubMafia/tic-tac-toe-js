@@ -31,8 +31,9 @@ io.on("connection", (client) => {
 		// console.log(state[client.code][0]);
 		console.log(state[client.code]);
 	});
-	client.on("newGame", () => {
+	client.on("newGame", (playerOne) => {
 		const code = String(Math.round(Math.random() * 1000000));
+		client.name = playerOne;
 		client.join(code);
 		rooms[code] = [client.id];
 		console.log(rooms);
@@ -48,14 +49,20 @@ io.on("connection", (client) => {
 		// ensure user hasn't joined other rooms
 		client.code = code;
 		client.emit("gameCode", code);
+		state[code].playerOneName = playerOne;
+		client.emit('playerName', playerOne);
 		console.log(state[code])
 	});
-	client.on("joinGame", (code) => {
+	client.on("joinGame", (code, playerTwo) => {
 		if (rooms[code].length === 2) return;
+		// ensure room doesn't have more than 2 players
 		client.join(code);
 		rooms[code].push(client.id);
 		console.log(rooms);
 		client.code = code;
+		client.name = playerTwo;
+		state[code].playerTwoName = playerTwo;
+		io.to(code).emit("playerNames", state[code].playerOneName, playerTwo);
 		client.player = "O";
 		state[code].currentPlayer = rooms[client.code][0];
 
