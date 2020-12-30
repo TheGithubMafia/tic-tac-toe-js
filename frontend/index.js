@@ -1,24 +1,40 @@
+const mainPage = document.getElementById("main-page");
+const gamePage = document.getElementById("game-page");
+const createGameButton = document.getElementById("new-button");
+const playerOne = document.getElementById("new-game-playername");
+const joinGameButton = document.getElementById("join-button");
+const gameIdField = document.getElementById("game-id-field");
+const playerTwo = document.getElementById("join-game-playername");
+const playerOneName = document.getElementById("player-one-name");
+const playerTwoName = document.getElementById("player-two-name");
+const gameId = document.getElementById("game-id");
+
 const socket = io();
-const joinGameButton = document.getElementById("join");
-const createGameButton = document.getElementById("create");
-const gameId = document.getElementById('game-id');
-const playerOne = document.getElementById('new-game-playername');
-const playerTwo = document.getElementById('join-game-playername');
+
 createGameButton.addEventListener("click", handleCreateGame);
 joinGameButton.addEventListener("click", handleJoinGame);
-const p = document.querySelector('p');
 
+gamePage.style.display = "none";
 
 function handleCreateGame(e) {
 	e.preventDefault();
+	if (!playerOne.value) return;
+	mainPage.style.display = "none";
+	gamePage.style.display = "grid";
+	playerOneName.innerText = playerOne.value;
+	playerTwoName.innerText = "Waiting...";
 	socket.emit("newGame", playerOne.value);
 }
 
 function handleJoinGame(e) {
 	e.preventDefault();
-	socket.emit("joinGame", gameId.value, playerTwo.value);
+	if (!playerTwo.value || !gameIdField.value) return;
+	mainPage.style.display = "none";
+	gamePage.style.display = "grid";
+	gameId.style.display = "none";
+
+	socket.emit("joinGame", gameIdField.value, playerTwo.value);
 }
-// socket.on('connection')
 const cells = document.querySelectorAll(".cell");
 cells.forEach((cell) => cell.addEventListener("click", handleClick));
 
@@ -34,13 +50,26 @@ socket.on("update", (id, currentPlayer) => {
 });
 
 socket.on("gameCode", (code) => {
-	document.querySelector("#title").innerText = `joined game ${code}`;
+	// document.querySelector("#title").innerText = `joined game ${code}`;
+	gameId.innerText = `Game ID: ${code}`;
 });
 
-socket.on('playerName', (name) => {
-	p.innerText = `${name} vs `
+socket.on("playerName", (name) => {
+	p.innerText = `${name} vs `;
 });
 
-socket.on('playerNames', (one, two) => {
-	p.innerText = `${one} vs ${two}`;
+socket.on("playerNames", (one, two) => {
+	playerOneName.innerText = one;
+	playerTwoName.innerText = two;
+	gameId.style.display = "none";
+});
+
+socket.on("currentPlayer", (player) => {
+	if (player === "X") {
+		document.getElementById("player-one").style.color = "red";
+		document.getElementById("player-two").style.color = "black";
+	} else {
+		document.getElementById("player-one").style.color = "black";
+		document.getElementById("player-two").style.color = "red";
+	}
 });
