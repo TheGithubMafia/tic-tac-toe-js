@@ -1,24 +1,171 @@
+@import url("https://fonts.googleapis.com/css2?family=Kanit&display=swap");
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+:root {
+	font-size: 62.5%;
+	font-family: "Kanit", sans-serif;
+}
+
 body {
 	height: 100vh;
+	width: 100%;
+	background-color: white;
+}
+
+#main-page {
+	height: 100vh;
+	width: 100%;
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-template-rows: 1fr 1fr 2fr;
+	justify-items: center;
+}
+
+#main-page > header {
+	font-size: 4.5rem;
+	grid-row: 1 / 2;
+	grid-column: 1 / -1;
+	display: grid;
+	place-content: center;
+}
+
+form {
+	width: 50rem;
+	padding: 1rem;
+	background-color: white;
+}
+
+form:first-child {
+	grid-row: 2 / 3;
+	grid-column: 1 / -1;
+}
+
+form:last-child {
+	grid-row: 3 / 4;
+	grid-column: 1 / -1;
+}
+
+label {
+	font-size: 2.5rem;
+	display: flex;
+	flex-direction: column;
+}
+
+input {
+	font-family: inherit;
+	border: 0.5rem solid black;
+	font-size: 2rem;
+	padding: 0.5rem 1rem;
+	outline: none;
+	margin-bottom: 0.8rem;
+}
+
+input:focus {
+	border: 0.5rem solid red;
+}
+
+button {
+	background-color: red;
+	font-family: inherit;
+	color: black;
+	font-size: 2rem;
+	padding: 1rem;
+	font-weight: bold;
+	border: none;
+	outline: none;
+	width: 100%;
+}
+
+#game-page {
+	width: 100%;
+	height: 100vh;
+	display: grid;
+	grid-template-rows: 0.5fr 6fr;
+	/* grid-template-columns: 1fr; */
+}
+
+#game-page > header {
+	display: flex;
+	width: 100%;
+}
+
+#game-page > header > div {
+	width: 20%;
+	border-bottom: 0.5rem solid red;
+	padding: 0 1.2rem;
+}
+
+#game-page > header > div:first-child {
+	text-align: end;
+}
+
+#game-page > header > div > p:first-child {
+	font-size: 5rem;
+	font-weight: bold;
+}
+
+#game-page > header > div > p:last-child {
+	font-size: 2rem;
+}
+
+#game-id {
+	font-size: 3rem;
+	font-weight: bold;
 	display: grid;
 	place-items: center;
+}
+
+#player-one {
+	margin-right: auto;
+}
+
+#player-two {
+	margin-left: auto;
 }
 
 #grid {
 	display: grid;
-	width: 500px;
-	height: 500px;
-	gap: 15px;
-	grid-template-columns: repeat(3, 1fr);
-	grid-template-rows: repeat(3, 1fr);
-	background-color: black;
-	font-size: 50px;
-	font-family: sans-serif;
+	grid-template-columns: repeat(3, 22vmin);
+	grid-template-rows: repeat(3, 22vmin);
+	background-color: white;
 	font-weight: bold;
+	justify-self: center;
+	align-self: center;
 }
 
 .cell {
-	background-color: white;
+	background-color: transparent;
 	display: grid;
-	place-items: center;
+	place-content: center;
+	border: calc(0.5vmin + 0.6rem) solid red;
+	color: black;
+	font-family: "Kanit";
+	font-size: calc(4vmin + 6rem);
+}
+
+.cell:nth-child(1),
+.cell:nth-child(2),
+.cell:nth-child(3) {
+	border-top: none;
+}
+.cell:nth-child(7),
+.cell:nth-child(8),
+.cell:nth-child(9) {
+	border-bottom: none;
+}
+
+.cell:nth-child(1),
+.cell:nth-child(4),
+.cell:nth-child(7) {
+	border-left: none;
+}
+.cell:nth-child(3),
+.cell:nth-child(6),
+.cell:nth-child(9) {
+	border-right: none;
 }

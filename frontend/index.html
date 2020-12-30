@@ -9,30 +9,51 @@
 </head>
 
 <body>
-    <h1 id="title"></h1>
-    <p></p>
+    <section id="main-page">
+        <header>
+            <h1 id="title">Tic Tac Toe</h1>
+        </header>
         <form action="">
-            <input type="text" id="new-game-playername" placeholder="Your name">
-    <button id="create">create game</button>
-
+            <label>
+                Create a new game
+                <input type="text" id="new-game-playername" placeholder="Your Name">
+            </label>
+            <button id="new-button">New Game</button>
         </form>
-    <form action="">
-        <input type="text" id="game-id" placeholder="Game ID">
-        <input type="text" id="join-game-playername" placeholder="Your name">
-        <button id="join">join game</button>
-    </form>
+        <form action="">
+            <label>
+                Or join an existing one
+                <input type="text" id="game-id-field" placeholder="Game ID">
+                <input type="text" id="join-game-playername" placeholder="Your Name">
+            </label>
+            <button id="join-button">Join Game</button>
+        </form>
+    </section>
 
-    <div id="grid">
-        <div class="cell" id="[0, 0]"></div>
-        <div class="cell" id="[0, 1]"></div>
-        <div class="cell" id="[0, 2]"></div>
-        <div class="cell" id="[1, 0]"></div>
-        <div class="cell" id="[1, 1]"></div>
-        <div class="cell" id="[1, 2]"></div>
-        <div class="cell" id="[2, 0]"></div>
-        <div class="cell" id="[2, 1]"></div>
-        <div class="cell" id="[2, 2]"></div>
-    </div>
+    <section id="game-page">
+        <header>
+            <div id="player-one">
+                <p>X</p>
+                <p id="player-one-name">Player one name</p>
+            </div>
+            <div id="game-id"></div>
+            <div id="player-two">
+                <p>O</p>
+                <p id="player-two-name">Player two name</p>
+            </div>
+        </header>
+        <div id="grid">
+            <div class="cell" id="[0, 0]"></div>
+            <div class="cell" id="[0, 1]"></div>
+            <div class="cell" id="[0, 2]"></div>
+            <div class="cell" id="[1, 0]"></div>
+            <div class="cell" id="[1, 1]"></div>
+            <div class="cell" id="[1, 2]"></div>
+            <div class="cell" id="[2, 0]"></div>
+            <div class="cell" id="[2, 1]"></div>
+            <div class="cell" id="[2, 2]"></div>
+        </div>
+    </section>
     <script src="https://cdn.socket.io/socket.io-3.0.1.min.js"></script>
     <script src="index.js"></script>
 </body>
