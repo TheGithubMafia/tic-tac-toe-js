@@ -120,8 +120,8 @@ io.on("connection", (client) => {
 		client.emit("gameCode", code);
 	});
 });
-
-server.listen(3000);
+const port = process.env.PORT || 3000;
+server.listen(port);
 
 /* 
 close connections and delete resources when connection is closed
