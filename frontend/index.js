@@ -41,6 +41,7 @@ cells.forEach((cell) => cell.addEventListener("click", handleClick));
 function handleClick(e) {
 	// const [a, b] = JSON.parse(e.target.id);
 	// console.log(a, b);
+	if (e.target.innerText) return;
 	socket.emit("clicked", e.target.id);
 }
 console.log("cells", cells);
@@ -72,4 +73,13 @@ socket.on("currentPlayer", (player) => {
 		document.getElementById("player-one").style.color = "black";
 		document.getElementById("player-two").style.color = "red";
 	}
+});
+
+socket.on("winner", (winner) => {
+	document.getElementById("player-one").style.color = "black";
+	document.getElementById("player-two").style.color = "black";
+	const winnerName =
+		winner === "X" ? playerOneName.innerText : playerTwoName.innerText;
+	gameId.style.display = "grid";
+	gameId.innerText = `${winnerName} wins!`;
 });

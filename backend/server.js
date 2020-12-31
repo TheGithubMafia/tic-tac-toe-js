@@ -4,20 +4,54 @@ const path = require("path");
 const server = require("http").createServer(app);
 const io = require("socket.io")(server);
 app.use(express.static(path.join(__dirname, "/../frontend")));
-// app.get("/", (req, res) => {
-// 	res.sendFile(path.join(__dirname, "/../frontend/index.html"));
-// });
+app.get("/", (req, res) => {
+	res.sendFile(path.join(__dirname, "/../frontend/index.html"));
+});
 const rooms = {};
 const state = {};
+
+function findWinner(grid) {
+	const [rowOne, rowTwo, rowThree] = grid;
+	const colOne = [rowOne[0], rowTwo[0], rowThree[0]];
+	const colTwo = [rowOne[1], rowTwo[1], rowThree[1]];
+	const colThree = [rowOne[2], rowTwo[2], rowThree[2]];
+	const diagonalOne = [rowOne[0], rowTwo[1], rowThree[2]];
+	const diagonalTwo = [rowOne[2], rowTwo[1], rowThree[0]];
+
+	if (
+		rowOne.every((item) => item === "X") ||
+		rowTwo.every((item) => item === "X") ||
+		rowThree.every((item) => item === "X") ||
+		colOne.every((item) => item === "X") ||
+		colTwo.every((item) => item === "X") ||
+		colThree.every((item) => item === "X") ||
+		diagonalOne.every((item) => item === "X") ||
+		diagonalTwo.every((item) => item === "X")
+	) {
+		return "X";
+	} else if (
+		rowOne.every((item) => item === "O") ||
+		rowTwo.every((item) => item === "O") ||
+		rowThree.every((item) => item === "O") ||
+		colOne.every((item) => item === "O") ||
+		colTwo.every((item) => item === "O") ||
+		colThree.every((item) => item === "O") ||
+		diagonalOne.every((item) => item === "O") ||
+		diagonalTwo.every((item) => item === "O")
+	) {
+		return "O";
+	} else {
+		return false;
+	}
+}
 
 io.on("connection", (client) => {
 	client.on("clicked", (id) => {
 		id = JSON.parse(id);
 		const [x, y] = id;
+		if (state[client.code].hasBeenWon) return;
 		if (client.player === state[client.code].currentPlayer) {
-			console.log("inside first if");
 			state[client.code][x][y] = client.player;
-			// console.log("rooms: ", rooms);
 			io.to(client.code).emit("update", `[${x}, ${y}]`, client.player);
 			if (
 				rooms[client.code][0].player ===
@@ -27,10 +61,19 @@ io.on("connection", (client) => {
 			} else {
 				state[client.code].currentPlayer = rooms[client.code][0].player;
 			}
-			io.to(client.code).emit(
-				"currentPlayer",
-				state[client.code].currentPlayer
-			);
+
+			if (findWinner(state[client.code])) {
+				io.to(client.code).emit(
+					"winner",
+					findWinner(state[client.code])
+				);
+				state[client.code].hasBeenWon = true;
+			} else {
+				io.to(client.code).emit(
+					"currentPlayer",
+					state[client.code].currentPlayer
+				);
+			}
 		}
 
 		// console.log(state[`${client.code}`][x][y]);

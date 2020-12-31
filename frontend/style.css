@@ -94,7 +94,7 @@ button {
 	width: 100%;
 }
 
-#game-page > header > div {
+#game-page > header > div:not(:nth-child(2)) {
 	width: 20%;
 	border-bottom: 0.5rem solid red;
 	padding: 0 1.2rem;
@@ -118,6 +118,7 @@ button {
 	font-weight: bold;
 	display: grid;
 	place-items: center;
+	padding: 0 1.2rem;
 }
 
 #player-one {
@@ -146,6 +147,7 @@ button {
 	color: black;
 	font-family: "Kanit";
 	font-size: calc(4vmin + 6rem);
+	cursor: default;
 }
 
 .cell:nth-child(1),
