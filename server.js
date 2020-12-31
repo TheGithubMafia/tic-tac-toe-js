@@ -3,12 +3,13 @@ const app = express();
 const path = require("path");
 const server = require("http").createServer(app);
 const io = require("socket.io")(server);
+const PORT = process.env.PORT || 3000;
+const { generateId } = require("./utils.js");
+
+const games = {};
+const boardState = {};
+
 app.use(express.static(path.join(__dirname, "./client")));
-app.get("/", (req, res) => {
-	res.sendFile(path.join(__dirname, "./client/index.html"));
-});
-const rooms = {};
-const state = {};
 
 function findWinner(grid) {
 	const [rowOne, rowTwo, rowThree] = grid;
@@ -46,87 +47,83 @@ function findWinner(grid) {
 }
 
 io.on("connection", (client) => {
-	client.on("clicked", (id) => {
-		id = JSON.parse(id);
-		const [x, y] = id;
-		if (state[client.code].hasBeenWon) return;
-		if (client.player === state[client.code].currentPlayer) {
-			state[client.code][x][y] = client.player;
-			io.to(client.code).emit("update", `[${x}, ${y}]`, client.player);
-			if (
-				rooms[client.code][0].player ===
-				state[client.code].currentPlayer
-			) {
-				state[client.code].currentPlayer = rooms[client.code][1].player;
-			} else {
-				state[client.code].currentPlayer = rooms[client.code][0].player;
-			}
-
-			if (findWinner(state[client.code])) {
-				io.to(client.code).emit(
-					"winner",
-					findWinner(state[client.code])
-				);
-				state[client.code].hasBeenWon = true;
-			} else {
-				io.to(client.code).emit(
-					"currentPlayer",
-					state[client.code].currentPlayer
-				);
-			}
-		}
-
-		// console.log(state[`${client.code}`][x][y]);
-		// state[client.code][id - 1] = "X";
-		// console.log(state[client.code]);
-		// console.log(state[client.code][0]);
-		console.log(state[client.code]);
-	});
-	client.on("newGame", (playerOne) => {
-		const code = String(Math.round(Math.random() * 1000000));
-		client.name = playerOne;
-		client.join(code);
-		client.player = "X";
-		console.log(rooms);
-		state[code] = [
+	client.on("newgame", (playerName) => {
+		const gameId = generateId();
+		client.join(gameId);
+		client.playerLetter = "X";
+		client.gameId = gameId;
+		// initial board state for new game
+		boardState[gameId] = [
 			[null, null, null],
 			[null, null, null],
 			[null, null, null],
 		];
+		boardState[gameId].playerOneName = playerName;
+		games[gameId] = [client];
 
-		// state[code].currentPlayer = client.id;
-		console.log("current clientID", client.id);
-		// ensure user hasn't joined other rooms
-		client.code = code;
-		client.emit("gameCode", code);
-		state[code].playerOneName = playerOne;
-		client.emit("playerName", playerOne);
-		console.log(state[code]);
-		rooms[code] = [client];
+		client.emit("gameid", gameId);
 	});
-	client.on("joinGame", (code, playerTwo) => {
-		if (rooms[code].length === 2) return;
-		// ensure room doesn't have more than 2 players
-		client.join(code);
-		console.log(rooms);
-		client.code = code;
-		client.name = playerTwo;
-		state[code].playerTwoName = playerTwo;
-		io.to(code).emit("playerNames", state[code].playerOneName, playerTwo);
-		client.player = "O";
-		state[code].currentPlayer = rooms[client.code][0].player;
-		io.to(code).emit("currentPlayer", state[code].currentPlayer);
-		rooms[code].push(client);
-		client.emit("gameCode", code);
+
+	client.on("joingame", (gameId, playerName) => {
+		// ensure no more than 2 players can join a game
+		if (games[gameId].length === 2) return;
+
+		client.join(gameId);
+		client.playerLetter = "O";
+		client.gameId = gameId;
+		boardState[gameId].playerTwoName = playerName;
+		boardState[gameId].currentPlayer = games[client.gameId][0].playerLetter;
+		games[gameId].push(client);
+
+		io.to(gameId).emit(
+			"playernames",
+			boardState[gameId].playerOneName,
+			playerName
+		);
+
+		io.to(gameId).emit("currentplayer", boardState[gameId].currentPlayer);
+	});
+
+	client.on("cellclick", (cellId) => {
+		const [x, y] = JSON.parse(cellId);
+
+		if (boardState[client.gameId].hasBeenWon) return;
+
+		if (client.playerLetter === boardState[client.gameId].currentPlayer) {
+			boardState[client.gameId][x][y] = client.playerLetter;
+
+			io.to(client.gameId).emit(
+				"updatecell",
+				`[${x}, ${y}]`,
+				client.playerLetter
+			);
+
+			// determine whose turn it is next
+			if (
+				games[client.gameId][0].playerLetter ===
+				boardState[client.gameId].currentPlayer
+			) {
+				boardState[client.gameId].currentPlayer =
+					games[client.gameId][1].playerLetter;
+			} else {
+				boardState[client.gameId].currentPlayer =
+					games[client.gameId][0].playerLetter;
+			}
+			// check if there's a winner
+			if (findWinner(boardState[client.gameId])) {
+				io.to(client.gameId).emit(
+					"winner",
+					findWinner(boardState[client.gameId])
+				);
+				boardState[client.gameId].hasBeenWon = true;
+			} else {
+				io.to(client.gameId).emit(
+					"currentplayer",
+					boardState[client.gameId].currentPlayer
+				);
+			}
+		}
 	});
 });
-const port = process.env.PORT || 3000;
-server.listen(port);
 
-/* 
-close connections and delete resources when connection is closed
-
-determine winner after each move
-
-refactor
-*/
+server.listen(PORT);
