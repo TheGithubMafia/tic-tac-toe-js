@@ -94,7 +94,7 @@ button {
 	width: 100%;
 }
 
-#game-page > header > div:not(:nth-child(2)) {
+#game-page > header > div {
 	width: 20%;
 	border-bottom: 0.5rem solid red;
 	padding: 0 1.2rem;
@@ -113,12 +113,13 @@ button {
 	font-size: 2rem;
 }
 
-#message {
+#game-page > header > #message {
 	font-size: 3rem;
 	font-weight: bold;
 	display: grid;
 	place-items: center;
 	padding: 0 1.2rem;
+	border: none;
 }
 
 #player-one {
