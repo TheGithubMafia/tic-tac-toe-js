@@ -3,9 +3,9 @@ const app = express();
 const path = require("path");
 const server = require("http").createServer(app);
 const io = require("socket.io")(server);
-app.use(express.static(path.join(__dirname, "/../frontend")));
+app.use(express.static(path.join(__dirname, "./client")));
 app.get("/", (req, res) => {
-	res.sendFile(path.join(__dirname, "/../frontend/index.html"));
+	res.sendFile(path.join(__dirname, "./client/index.html"));
 });
 const rooms = {};
 const state = {};
