@@ -74,7 +74,6 @@ io.on("connection", (client) => {
 		boardState[gameId].playerTwoName = playerName;
 		boardState[gameId].currentPlayer = games[client.gameId][0].playerLetter;
 		games[gameId].push(client);
-
 		io.to(gameId).emit(
 			"playernames",
 			boardState[gameId].playerOneName,
