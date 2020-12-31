@@ -60,8 +60,8 @@ io.on("connection", (client) => {
 		];
 		boardState[gameId].playerOneName = playerName;
 		games[gameId] = [client];
-
 		client.emit("gameid", gameId);
+		client.emit("playerletter", client.playerLetter);
 	});
 
 	client.on("joingame", (gameId, playerName) => {
@@ -79,13 +79,12 @@ io.on("connection", (client) => {
 			boardState[gameId].playerOneName,
 			playerName
 		);
-
+		client.emit("playerletter", client.playerLetter);
 		io.to(gameId).emit("currentplayer", boardState[gameId].currentPlayer);
 	});
 
 	client.on("cellclick", (cellId) => {
 		const [x, y] = JSON.parse(cellId);
-
 		if (boardState[client.gameId].hasBeenWon) return;
 
 		if (client.playerLetter === boardState[client.gameId].currentPlayer) {
@@ -108,6 +107,7 @@ io.on("connection", (client) => {
 				boardState[client.gameId].currentPlayer =
 					games[client.gameId][0].playerLetter;
 			}
+
 			// check if there's a winner
 			if (findWinner(boardState[client.gameId])) {
 				io.to(client.gameId).emit(
@@ -122,6 +122,21 @@ io.on("connection", (client) => {
 				);
 			}
 		}
+	});
+
+	client.on("replay", (playerLetter) => {
+		boardState[client.gameId] = [
+			[null, null, null],
+			[null, null, null],
+			[null, null, null],
+		];
+		delete boardState[client.gameId].hasBeenWon;
+		boardState[client.gameId].currentPlayer = playerLetter;
+		io.to(client.gameId).emit(
+			"currentplayer",
+			boardState[client.gameId].currentPlayer
+		);
+		io.to(client.gameId).emit("restartgame");
 	});
 });
 

@@ -7,7 +7,8 @@ const gameIdField = document.getElementById("game-id-field");
 const playerTwoName = document.getElementById("join-game-playername");
 const playerOne = document.getElementById("player-one-name");
 const playerTwo = document.getElementById("player-two-name");
-const messageField = document.getElementById("message");
+const textField = document.getElementById("text-field");
+const newGameButton = document.getElementById("new-game");
 const cells = document.querySelectorAll(".cell");
 
 const socket = io();
@@ -15,8 +16,13 @@ const socket = io();
 createGameButton.addEventListener("click", handleCreateGame);
 joinGameButton.addEventListener("click", handleJoinGame);
 cells.forEach((cell) => cell.addEventListener("click", handleClick));
+newGameButton.addEventListener("click", () => {
+	newGameButton.style.display = "none";
+	socket.emit("replay", sessionStorage.getItem("playerLetter"));
+});
 
 gamePage.style.display = "none";
+newGameButton.style.display = "none";
 
 function handleCreateGame(e) {
 	e.preventDefault();
@@ -33,7 +39,7 @@ function handleJoinGame(e) {
 	if (!playerTwoName.value || !gameIdField.value) return;
 	mainPage.style.display = "none";
 	gamePage.style.display = "grid";
-	messageField.style.display = "none";
+	textField.style.display = "none";
 	socket.emit("joingame", gameIdField.value, playerTwoName.value);
 }
 
@@ -48,14 +54,18 @@ socket.on("updatecell", (cellId, playerLetter) => {
 	).innerText = playerLetter;
 });
 
-socket.on("gameid", (code) => {
-	messageField.innerText = `Game ID: ${code}`;
+socket.on("gameid", (id) => {
+	textField.innerText = `Game ID: ${id}`;
+});
+
+socket.on("playerletter", (letter) => {
+	sessionStorage.setItem("playerLetter", letter);
 });
 
 socket.on("playernames", (p1, p2) => {
 	playerOne.innerText = p1;
 	playerTwo.innerText = p2;
-	messageField.style.display = "none";
+	textField.style.display = "none";
 });
 
 socket.on("currentplayer", (playerLetter) => {
@@ -73,6 +83,13 @@ socket.on("winner", (winner) => {
 	document.getElementById("player-two").style.color = "black";
 	const winnerName =
 		winner === "X" ? playerOne.innerText : playerTwo.innerText;
-	messageField.style.display = "grid";
-	messageField.innerText = `${winnerName} wins!`;
+	newGameButton.style.display = "block";
+	textField.style.display = "block";
+	textField.innerText = `${winnerName} wins!`;
+});
+
+socket.on("restartgame", () => {
+	textField.style.display = "none";
+	newGameButton.style.display = "none";
+	cells.forEach((cell) => (cell.innerText = ""));
 });
