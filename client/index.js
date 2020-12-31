@@ -23,7 +23,7 @@ function handleCreateGame(e) {
 	gamePage.style.display = "grid";
 	playerOneName.innerText = playerOne.value;
 	playerTwoName.innerText = "Waiting...";
-	socket.emit("newGame", playerOne.value);
+	socket.emit("newgame", playerOne.value);
 }
 
 function handleJoinGame(e) {
@@ -33,7 +33,7 @@ function handleJoinGame(e) {
 	gamePage.style.display = "grid";
 	gameId.style.display = "none";
 
-	socket.emit("joinGame", gameIdField.value, playerTwo.value);
+	socket.emit("joingame", gameIdField.value, playerTwo.value);
 }
 const cells = document.querySelectorAll(".cell");
 cells.forEach((cell) => cell.addEventListener("click", handleClick));
@@ -42,31 +42,28 @@ function handleClick(e) {
 	// const [a, b] = JSON.parse(e.target.id);
 	// console.log(a, b);
 	if (e.target.innerText) return;
-	socket.emit("clicked", e.target.id);
+	socket.emit("cellclick", e.target.id);
 }
-console.log("cells", cells);
-socket.on("update", (id, currentPlayer) => {
-	// cells[id - 1].innerText = "X";
-	Array.from(cells).find((x) => x.id === id).innerText = currentPlayer;
+
+socket.on("updatecell", (cellId, playerLetter) => {
+	Array.from(cells).find(
+		(cell) => cell.id === cellId
+	).innerText = playerLetter;
 });
 
-socket.on("gameCode", (code) => {
+socket.on("gameid", (code) => {
 	// document.querySelector("#title").innerText = `joined game ${code}`;
 	gameId.innerText = `Game ID: ${code}`;
 });
 
-socket.on("playerName", (name) => {
-	p.innerText = `${name} vs `;
-});
-
-socket.on("playerNames", (one, two) => {
-	playerOneName.innerText = one;
-	playerTwoName.innerText = two;
+socket.on("playernames", (playerOne, playerTwo) => {
+	playerOneName.innerText = playerOne;
+	playerTwoName.innerText = playerTwo;
 	gameId.style.display = "none";
 });
 
-socket.on("currentPlayer", (player) => {
-	if (player === "X") {
+socket.on("currentplayer", (playerLetter) => {
+	if (playerLetter === "X") {
 		document.getElementById("player-one").style.color = "red";
 		document.getElementById("player-two").style.color = "black";
 	} else {
