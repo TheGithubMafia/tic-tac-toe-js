@@ -83,20 +83,13 @@ socket.on("currentplayer", (playerLetter) => {
 socket.on("gameover", (winner) => {
 	document.getElementById("player-one").style.color = "black";
 	document.getElementById("player-two").style.color = "black";
-	let winnerName;
+	newGameButton.style.display = "block";
+	textField.style.display = "block";
 	if (winner === "X") {
-		winnerName = playerOne.innerText;
-		newGameButton.style.display = "block";
-		textField.style.display = "block";
-		textField.innerText = `${winnerName} wins!`;
+		textField.innerText = `${playerOne.innerText} wins!`;
 	} else if (winner === "O") {
-		winnerName = playerTwo.innerText;
-		newGameButton.style.display = "block";
-		textField.style.display = "block";
-		textField.innerText = `${winnerName} wins!`;
+		textField.innerText = `${playerTwo.innerText} wins!`;
 	} else {
-		newGameButton.style.display = "block";
-		textField.style.display = "block";
 		textField.innerText = winner;
 	}
 });
