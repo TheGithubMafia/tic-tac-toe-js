@@ -80,14 +80,25 @@ socket.on("currentplayer", (playerLetter) => {
 	}
 });
 
-socket.on("winner", (winner) => {
+socket.on("gameover", (winner) => {
 	document.getElementById("player-one").style.color = "black";
 	document.getElementById("player-two").style.color = "black";
-	const winnerName =
-		winner === "X" ? playerOne.innerText : playerTwo.innerText;
-	newGameButton.style.display = "block";
-	textField.style.display = "block";
-	textField.innerText = `${winnerName} wins!`;
+	let winnerName;
+	if (winner === "X") {
+		winnerName = playerOne.innerText;
+		newGameButton.style.display = "block";
+		textField.style.display = "block";
+		textField.innerText = `${winnerName} wins!`;
+	} else if (winner === "O") {
+		winnerName = playerTwo.innerText;
+		newGameButton.style.display = "block";
+		textField.style.display = "block";
+		textField.innerText = `${winnerName} wins!`;
+	} else {
+		newGameButton.style.display = "block";
+		textField.style.display = "block";
+		textField.innerText = winner;
+	}
 });
 
 socket.on("restartgame", () => {
