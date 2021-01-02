@@ -21,13 +21,12 @@ body {
 	height: 100vh;
 	width: 100%;
 	display: grid;
-	grid-template-columns: 1fr;
 	grid-template-rows: 1fr 1fr 2fr;
 	justify-items: center;
 }
 
 #main-page > header {
-	font-size: 4.5rem;
+	font-size: 4rem;
 	grid-row: 1 / 2;
 	grid-column: 1 / -1;
 	display: grid;
@@ -35,9 +34,7 @@ body {
 }
 
 form {
-	width: 50rem;
-	padding: 1rem;
-	background-color: white;
+	width: 40rem;
 }
 
 form:first-child {
@@ -60,7 +57,7 @@ input {
 	font-family: inherit;
 	border: 0.5rem solid black;
 	font-size: 2rem;
-	padding: 0.5rem 1rem;
+	padding: 0.5rem;
 	outline: none;
 	margin-bottom: 0.8rem;
 }
@@ -74,11 +71,10 @@ button {
 	font-family: inherit;
 	color: black;
 	font-size: 2rem;
-	padding: 1rem;
-	font-weight: bold;
-	border: none;
+	padding: 0.6rem;
 	outline: none;
 	width: 100%;
+	border: 0.5rem solid black;
 }
 
 #game-page {
@@ -86,7 +82,6 @@ button {
 	height: 100vh;
 	display: grid;
 	grid-template-rows: 0.5fr 6fr;
-	/* grid-template-columns: 1fr; */
 }
 
 #game-page > header {
@@ -97,7 +92,7 @@ button {
 #game-page > header > div {
 	width: 20%;
 	border-bottom: 0.5rem solid red;
-	padding: 0 1.2rem;
+	padding: 0 0.3rem;
 }
 
 #game-page > header > div:first-child {
@@ -114,12 +109,18 @@ button {
 }
 
 #game-page > header > #message {
-	font-size: 3rem;
-	font-weight: bold;
-	display: grid;
-	place-items: center;
+	font-size: 2.5rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
 	padding: 0 1.2rem;
 	border: none;
+	width: 60%;
+}
+
+#new-game {
+	width: 60%;
 }
 
 #player-one {
@@ -132,22 +133,20 @@ button {
 
 #grid {
 	display: grid;
-	grid-template-columns: repeat(3, 22vmin);
-	grid-template-rows: repeat(3, 22vmin);
-	background-color: white;
+	grid-template-columns: repeat(3, 15rem);
+	grid-template-rows: repeat(3, 15rem);
 	font-weight: bold;
 	justify-self: center;
 	align-self: center;
 }
 
 .cell {
-	background-color: transparent;
 	display: grid;
 	place-content: center;
-	border: calc(0.5vmin + 0.6rem) solid red;
+	border: 0.5rem solid red;
 	color: black;
 	font-family: "Kanit";
-	font-size: calc(4vmin + 6rem);
+	font-size: 8rem;
 	cursor: default;
 }
 
@@ -171,4 +170,23 @@ button {
 .cell:nth-child(6),
 .cell:nth-child(9) {
 	border-right: none;
+}
+
+@media (max-width: 500px) {
+	form {
+		width: 80%;
+	}
+	#main-page > header {
+		font-size: 9vw;
+	}
+	#game-page > header > #message {
+		font-size: 2rem;
+	}
+	#grid {
+		grid-template-columns: repeat(3, 12rem);
+		grid-template-rows: repeat(3, 12rem);
+	}
+	.cell {
+		font-size: 6rem;
+	}
 }
