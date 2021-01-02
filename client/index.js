@@ -16,10 +16,7 @@ const socket = io();
 createGameButton.addEventListener("click", handleCreateGame);
 joinGameButton.addEventListener("click", handleJoinGame);
 cells.forEach((cell) => cell.addEventListener("click", handleClick));
-newGameButton.addEventListener("click", () => {
-	newGameButton.style.display = "none";
-	socket.emit("replay", sessionStorage.getItem("playerLetter"));
-});
+newGameButton.addEventListener("click", handleNewGame);
 
 gamePage.style.display = "none";
 newGameButton.style.display = "none";
@@ -46,6 +43,11 @@ function handleJoinGame(e) {
 function handleClick(e) {
 	if (e.target.innerText) return;
 	socket.emit("cellclick", e.target.id);
+}
+
+function handleNewGame() {
+	newGameButton.style.display = "none";
+	socket.emit("replay", sessionStorage.getItem("playerLetter"));
 }
 
 socket.on("updatecell", (cellId, playerLetter) => {
@@ -92,4 +94,14 @@ socket.on("restartgame", () => {
 	textField.style.display = "none";
 	newGameButton.style.display = "none";
 	cells.forEach((cell) => (cell.innerText = ""));
+});
+
+socket.on("offline", (letter) => {
+	if (letter === playerOne.innerText) {
+		playerOne.innerText = "Offline";
+	} else {
+		playerTwo.innerText = "Offline";
+	}
+	cells.forEach((cell) => cell.removeEventListener("click", handleClick));
+	newGameButton.removeEventListener("click", handleNewGame);
 });

@@ -138,6 +138,12 @@ io.on("connection", (client) => {
 		);
 		io.to(client.gameId).emit("restartgame");
 	});
+
+	client.on("disconnect", () => {
+		io.to(client.gameId).emit("offline", client.playerLetter);
+		delete boardState[client.gameId];
+		delete games[client.gameId];
+	});
 });
 
 server.listen(PORT);
