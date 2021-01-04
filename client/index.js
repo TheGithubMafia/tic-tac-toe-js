@@ -10,6 +10,7 @@ const playerTwo = document.getElementById("player-two-name");
 const textField = document.getElementById("text-field");
 const newGameButton = document.getElementById("new-game");
 const cells = document.querySelectorAll(".cell");
+let gamesList;
 
 const socket = io();
 
@@ -34,6 +35,7 @@ function handleCreateGame(e) {
 function handleJoinGame(e) {
 	e.preventDefault();
 	if (!playerTwoName.value || !gameIdField.value) return;
+	if (!gamesList.includes(gameIdField.value)) return;
 	mainPage.style.display = "none";
 	gamePage.style.display = "grid";
 	textField.style.display = "none";
@@ -49,6 +51,10 @@ function handleNewGame() {
 	newGameButton.style.display = "none";
 	socket.emit("replay", sessionStorage.getItem("playerLetter"));
 }
+
+socket.on("games", (games) => {
+	gamesList = games;
+});
 
 socket.on("updatecell", (cellId, playerLetter) => {
 	Array.from(cells).find(

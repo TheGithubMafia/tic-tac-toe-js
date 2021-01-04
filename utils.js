@@ -1,4 +1,4 @@
-const generateId = () => Math.random().toString(16).slice(2);
+const generateId = () => Math.random().toString(16).slice(10);
 
 function findWinner(grid) {
 	const [rowOne, rowTwo, rowThree] = grid;
