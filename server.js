@@ -12,6 +12,8 @@ const boardState = {};
 app.use(express.static(path.join(__dirname, "./client")));
 
 io.on("connection", (client) => {
+	io.emit("games", Object.keys(games));
+
 	client.on("newgame", (playerName) => {
 		const gameId = generateId();
 		client.join(gameId);
