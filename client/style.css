@@ -94,7 +94,22 @@ button {
 	border-bottom: 0.5rem solid red;
 	padding: 0 0.3rem;
 }
-
+#status-one {
+	width: 1rem;
+	height: 1rem;
+	display: inline-block;
+	border-radius: 50%;
+	background-color: grey;
+	margin-left: 0.5rem;
+}
+#status-two {
+	width: 1rem;
+	height: 1rem;
+	display: inline-block;
+	border-radius: 50%;
+	background-color: grey;
+	margin-right: 0.5rem;
+}
 #game-page > header > div:first-child {
 	text-align: end;
 }
@@ -104,8 +119,20 @@ button {
 	font-weight: bold;
 }
 
-#game-page > header > div > p:last-child {
+#player-one-name,
+#player-two-name {
 	font-size: 2rem;
+}
+
+#player-one > div {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+}
+#player-two > div {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
 }
 
 #game-page > header > #message {

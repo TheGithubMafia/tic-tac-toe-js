@@ -10,7 +10,9 @@ const playerTwo = document.getElementById("player-two-name");
 const textField = document.getElementById("text-field");
 const newGameButton = document.getElementById("new-game");
 const cells = document.querySelectorAll(".cell");
-let gamesList;
+const statusOne = document.getElementById("status-one");
+const statusTwo = document.getElementById("status-two");
+let gamesList = [];
 
 const socket = io();
 
@@ -24,21 +26,34 @@ newGameButton.style.display = "none";
 
 function handleCreateGame(e) {
 	e.preventDefault();
-	if (!playerOneName.value) return;
+	if (!playerOneName.value) {
+		alert("Please enter your name");
+		return;
+	}
 	mainPage.style.display = "none";
 	gamePage.style.display = "grid";
 	playerOne.innerText = playerOneName.value;
+	statusOne.style.backgroundColor = "lime";
 	playerTwo.innerText = "Waiting...";
+	statusTwo.style.backgroundColor = "grey";
 	socket.emit("newgame", playerOneName.value);
 }
 
 function handleJoinGame(e) {
 	e.preventDefault();
-	if (!playerTwoName.value || !gameIdField.value) return;
-	if (!gamesList.includes(gameIdField.value)) return;
+	if (!playerTwoName.value || !gameIdField.value) {
+		alert("Game ID and player name fields are required");
+		return;
+	}
+
+	if (!gamesList.includes(gameIdField.value)) {
+		alert("Invalid game ID");
+		return;
+	}
 	mainPage.style.display = "none";
 	gamePage.style.display = "grid";
 	textField.style.display = "none";
+	statusTwo.style.backgroundColor = "lime";
 	socket.emit("joingame", gameIdField.value, playerTwoName.value);
 }
 
@@ -74,6 +89,8 @@ socket.on("playernames", (p1, p2) => {
 	playerOne.innerText = p1;
 	playerTwo.innerText = p2;
 	textField.style.display = "none";
+	statusOne.style.backgroundColor = "lime";
+	statusTwo.style.backgroundColor = "lime";
 });
 
 socket.on("currentplayer", (playerLetter) => {
@@ -107,11 +124,13 @@ socket.on("restartgame", () => {
 });
 
 socket.on("offline", (letter) => {
-	if (letter === playerOne.innerText) {
-		playerOne.innerText = "Offline";
+	if (letter === "X") {
+		statusOne.style.backgroundColor = "grey";
 	} else {
-		playerTwo.innerText = "Offline";
+		statusTwo.style.backgroundColor = "grey";
 	}
 	cells.forEach((cell) => cell.removeEventListener("click", handleClick));
 	newGameButton.removeEventListener("click", handleNewGame);
+	document.getElementById("player-one").style.color = "black";
+	document.getElementById("player-two").style.color = "black";
 });
