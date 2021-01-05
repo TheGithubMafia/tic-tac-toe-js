@@ -8,11 +8,14 @@ const { generateId, findWinner } = require("./utils.js");
 
 const games = {};
 const boardState = {};
+let gamesList = Object.keys(games);
 
 app.use(express.static(path.join(__dirname, "./client")));
 
 io.on("connection", (client) => {
-	io.emit("games", Object.keys(games));
+	gamesList = gamesList.filter((game) => games[game].length < 2);
+
+	io.emit("games", gamesList);
 
 	client.on("newgame", (playerName) => {
 		const gameId = generateId();
@@ -28,6 +31,8 @@ io.on("connection", (client) => {
 		boardState[gameId].playerOneName = playerName;
 		games[gameId] = [client];
 		client.emit("gameid", gameId);
+		gamesList = Object.keys(games).filter((game) => games[game].length < 2);
+		io.emit("games", gamesList);
 		client.emit("playerletter", client.playerLetter);
 	});
 
@@ -48,6 +53,8 @@ io.on("connection", (client) => {
 		);
 		client.emit("playerletter", client.playerLetter);
 		io.to(gameId).emit("currentplayer", boardState[gameId].currentPlayer);
+		gamesList = Object.keys(games).filter((game) => games[game].length < 2);
+		io.emit("games", gamesList);
 	});
 
 	client.on("cellclick", (cellId) => {
@@ -110,6 +117,9 @@ io.on("connection", (client) => {
 		io.to(client.gameId).emit("offline", client.playerLetter);
 		delete boardState[client.gameId];
 		delete games[client.gameId];
+		gamesList = Object.keys(games).filter((game) => games[game].length < 2);
+
+		io.emit("games", gamesList);
 	});
 });
 
