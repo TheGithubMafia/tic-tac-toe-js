@@ -89,8 +89,8 @@ button {
 	width: 100%;
 }
 
-#game-page > header > div {
-	width: 20%;
+#game-page > header > div:not(:nth-child(2)) {
+	width: 35%;
 	border-bottom: 0.5rem solid red;
 	padding: 0 0.3rem;
 }
