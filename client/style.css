@@ -69,11 +69,16 @@ input:focus {
 button {
 	background-color: red;
 	font-family: inherit;
-	color: black;
+	color: white;
 	font-size: 2rem;
-	padding: 0.6rem;
+	padding: 0.1rem 0.5rem;
 	outline: none;
-	width: 100%;
+	width: 15rem;
+	border: 0.5rem solid red;
+}
+
+button:hover,
+button:focus {
 	border: 0.5rem solid black;
 }
 
@@ -147,7 +152,7 @@ button {
 }
 
 #new-game {
-	width: 60%;
+	width: 15rem;
 }
 
 #player-one {
