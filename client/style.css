@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Kanit&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Kanit&family=Lato&display=swap");
 
 * {
 	margin: 0;
@@ -68,18 +68,19 @@ input:focus {
 
 button {
 	background-color: red;
-	font-family: inherit;
+	font-family: "Lato";
 	color: white;
-	font-size: 2rem;
-	padding: 0.1rem 0.5rem;
+	font-size: 1.5rem;
+	padding: 0.3rem 0.5rem;
 	outline: none;
-	width: 15rem;
-	border: 0.5rem solid red;
+	width: 12rem;
+	border: 0.3rem solid red;
+	border-radius: 0.5rem;
 }
 
 button:hover,
 button:focus {
-	border: 0.5rem solid black;
+	border: 0.3rem solid black;
 }
 
 #game-page {
