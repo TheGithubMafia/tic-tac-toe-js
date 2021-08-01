@@ -8,7 +8,7 @@ A simple implementation of a multiplayer tic tac toe game using Socket.IO, plain
 
 ## Description
 
-I made this for fun. Wanna play tic-tac-toe against a friend? Start a new game and share the generated game ID with them. Once you start a new game and another player joins, you can play any number of subsequent games as long as both players are still online. This was made possible thanks to the awesome Socket.IO library which makes event-based realtime bi-directional communication a breeze. I decided to use vanilla JavaScript to manipulate the DOM directly instead of a client-side framework for this project.
+Start a new game and share the generated game ID with them. Once you start a new game and another player joins, you can play any number of subsequent games as long as both players are still online.
 
 Technologies and libraries used:
 
@@ -28,10 +28,6 @@ Technologies and libraries used:
 -   Download the project dependencies: `npm install`
 -   Start the server: `npm server.js`
 
-## Authors
-
--   [asemarian](https://github.com/asemarian)
-
 ## Contributing
 
 Contributions are definitely welcome! Just follow these steps:
@@ -47,9 +43,3 @@ Contributions are definitely welcome! Just follow these steps:
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](/LICENSE.md) file for details
-
-## Acknowledgments
-
--   [How to fetch data with React Hooks?](https://www.robinwieruch.de/react-hooks-fetch-data)
--   [useWindowSize Hook](https://usehooks.com/useWindowSize/)
--   [Socket.IO](https://socket.io/docs/v4)
